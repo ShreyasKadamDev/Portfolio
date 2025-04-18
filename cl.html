@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SK.dev</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="main.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="website icon" href="photo/logo.png" type="png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.0/ScrollTrigger.min.js"></script>
+    <!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+
+    // Highlight active navigation item on scroll
+    const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        // Double the scroll items for continuous scroll effect
+        const scrollRows = document.querySelectorAll('.scroll-row');
+        
+        scrollRows.forEach(row => {
+            const items = row.innerHTML;
+            row.innerHTML = items + items;
+        });
+        
+        // Animation when scrolling into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+
+</script>
+
+<style>
+    /* Scrolling Rows */
+    .scroll-container {
+            width: 100%;
+            overflow: hidden;
+            margin: 3rem 0;
+            padding: 1rem 0;
+            position: relative;
+            background-color: var(--secondary-bg);
+        }
+        
+        .scroll-row {
+            display: flex;
+            animation: scroll 25s linear infinite;
+            white-space: nowrap;
+        }
+        
+        .scroll-item {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            font-size: 1.2rem;
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+</style>
+
+<script>
+  // Initialize EmailJS with your public key
+  (function () {
+    emailjs.init("eWxvP4_KAhxO6uN2z"); // Replace with your EmailJS public key
+  })();
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const submitBtn = document.querySelector(".submit-btn");
+
+    submitBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      // Get form values
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      // Basic validation
+      if (!name || !email || !message) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      // EmailJS send
+      emailjs
+        .send("service_cfglqwk", "template_a65rs9k", {
+          from_name: name,
+          from_email: email,
+          message: message,
+        })
+        .then(
+          function (response) {
+            console.log("SUCCESS!", response.status, response.text);
+            alert("Message sent successfully!");
+
+            // Clear the form
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+          },
+          function (error) {
+            console.error("FAILED...", error);
+            alert("Failed to send message. Please try again later.");
+          }
+        );
+    });
+  });
+</script>
+<script>
+  //disable right click
+  document.addEventListener('contextmenu',(e) => {
+    e.preventDefault()
+    return false
+  })
+  document.addEventListener('keydown',(e)=> {
+    e.stopPropagation()
+    e.preventDefault()
+
+  })
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const hamburger = document.querySelector(".hamburger");
+      const navMenu = document.querySelector("nav ul");
+  
+      hamburger.addEventListener("click", () => {
+        navMenu.classList.toggle("active");
+      });
+    });
+  </script>
+  
+  
+
+    <!-- <script>// Tool lists
+        const row1Tools = [
+            "Photoshop", "Excel", "Word", "PowerPoint", "Illustrator", 
+            "Premiere Pro", "IntelliJ IDEA", "Visual Studio", "VS Code", 
+            "Figma", "Canva", "InDesign", "Chrome DevTools", "Unity", 
+            "Bootstrap", "Node.js", "Git", "MATLAB"
+        ];
+        
+        const row2Tools = [
+            "X.ai", "Claude", "ChatGPT", "DALL-E", "Midjourney", 
+            "Copy.ai", "Grammarly", "GitHub Copilot",
+            "Repplit", "Gork", "Meta.ai", "M.Copilot"
+            
+        ];
+        
+        // Create buttons for scrolling rows
+        function createButtons(containerId, items) {
+            const container = document.getElementById(containerId);
+            
+            // Create multiple sets of buttons for continuous scrolling
+            for (let i = 0; i < 5; i++) {  // Create 3 sets for more continuous effect
+                items.forEach(item => {
+                    const button = document.createElement('button');
+                    button.className = 'tool-button';
+                    button.textContent = item;
+                    container.appendChild(button);
+                });
+            }
+            
+            return container;
+        }
+        
+        // Initialize scrolling when document is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize scrolling
+            const row1Container = createButtons('row1-buttons', row1Tools);
+            const row2Container = createButtons('row2-buttons', row2Tools);
+            
+            // Set starting positions
+            let row1Position = 0;
+            let row2Position = 0;
+        
+            // Animation function for continuous scrolling
+            function animate() {
+                // Move each row by different speeds for varied effect
+                row1Position -= 1;
+                row2Position -= 1.2;
+                
+                row1Container.style.transform = `translateX(${row1Position}px)`;
+                row2Container.style.transform = `translateX(${row2Position}px)`;
+                
+                // No reset - just keep scrolling continuously
+                requestAnimationFrame(animate);
+            }
+            
+            // Start animation
+            animate();
+        });</script> -->
+    <style>
+      
+
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Hi, Welcome</div>
+      <div class="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#home" class="nav-link">Home</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#certifications" class="nav-link">Certifications</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li><a href="https://drive.google.com/file/d/1A4Vs59XKqIquD4MBqQ26a_J6_6voP15G/view?usp=sharing" class="nav-link active">Download CV</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home">
+        <div class="bg-shapes">
+          <div class="shape" id="shape1"></div>
+          <div class="shape" id="shape2"></div>
+          <div class="shape" id="shape3"></div>
+        </div>
+        <div class="hero-content">
+          
+          <p class="hero-name">SHREYAS KADAM</p>
+          <h1 class="hero-title">Computer Engineering Student</h1>
+          <h1 class="hero-title">-Fresher-</h1>
+          <h2 class="hero-subtitle">at, Sinhgad Institute Of Technology, Lonavala</h2>
+          <p class="hero-summary">
+            I am currently a third-year Computer Engineering student at Singhad Institute Of Technology, with a strong foundation in programming
+            and a passion for technology. My experience includes projects on cutting edge technology and workshops that enhance my skills. I am
+            eager to leverage my academic knowledge and skills in a professional setting, making a significant contribution to innovative projects.
+          </p>
+        </div>
+        <div class="hero-photo">
+          <img src="photo/ProfilePhoto.jpg" alt="Profile Photo">
+        </div>
+        
+      </section>
+
+      <section id="skills">
+        <div class="container">
+          <h2 class="section-title">My Skills</h2>
+          <div class="skill-cards">
+            <div class="skill-card">
+              <div class="skill-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <h3 class="skill-title">Programming</h3>
+              <p class="skill-desc">
+                Proficient in Python, with solid problem-solving skills and experience also comfortable working with C++ and Java. Check out my work on 
+                <a href="https://leetcode.com/u/ShreyasKadamDev/">Leetcode</a>
+                .
+                <!-- I am proficient in Python, with strong skills in problem-solving and algorithmic thinking. 
+                I am also comfortable working with C++ and JavaScript, and have practical experience in tackling complex 
+                programming challenges. You can explore more of my coding journey and problem-solving approach on LeetCode. -->
+              </p>
+            </div>
+            <div class="skill-card">
+              <div class="skill-icon">
+                <i class="fas fa-laptop-code"></i>
+              </div>
+              <h3 class="skill-title">Web Development</h3>
+              <p class="skill-desc">
+                Experience with HTML, CSS, JavaScript, React, and Node.js for
+                creating responsive and interactive web applications.
+              </p>
+            </div>
+            <div class="skill-card">
+              <div class="skill-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <h3 class="skill-title">Database Management</h3>
+              <p class="skill-desc">
+                Knowledge of SQL and NoSQL databases including MySQL 
+                and MongoDB for data storage and retrieval, also familier to AWS
+              </p>
+            </div>
+            <div class="skill-card">
+              <div class="skill-icon">
+                <i class="fas fa-sitemap"></i>
+              </div>
+              <h3 class="skill-title">DS and ML</h3>
+              <p class="skill-desc">
+                I have done several projects with IBM workshop.
+                Worked with Panda and Numpy libraries. Check out on <a href="https://github.com/ShreyasKadamDev/Renewable-Energy-Usage-Prediction">Github</a>
+              </p>
+            </div>
+            <!-- <div class="skill-card">
+              <div class="skill-icon">
+                <i class="fas fa-sitemap"></i>
+              </div>
+              <h3 class="skill-title">System Design</h3>
+              <p class="skill-desc">
+                Knowledge of software architecture patterns, system design
+                principles, and best practices for scalable applications.
+              </p>
+            </div> -->
+            <!-- <div class="skill-card">
+              <div class="skill-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3 class="skill-title">Cybersecurity</h3>
+              <p class="skill-desc">
+                Understanding of security principles, cryptography, and secure
+                coding practices to build safe and reliable software.
+              </p>
+            </div> -->
+          </div>
+        </div>
+      </section>
+      <!-- Scrolling Tools Sections -->
+    <div class="scroll-container">
+        <h3 style="text-align: center; margin-bottom: 1rem; color: var(--accent-color);">Software Tools</h3>
+        <div class="scroll-row">
+            <div class="scroll-item">Chrome</div>
+            <div class="scroll-item">Visual Studio Code</div>
+            <div class="scroll-item">IntelliJ IDEA</div>
+            <div class="scroll-item">Kaggle</div>
+            <div class="scroll-item">GitHub</div>
+            <div class="scroll-item">Docker</div>
+            <div class="scroll-item">Figma</div>
+            <div class="scroll-item">Node.js</div>
+            <div class="scroll-item">AWS Console</div>
+            <div class="scroll-item">Anaconda</div>
+            <div class="scroll-item">MySQL </div>
+            <div class="scroll-item">Visual Studio Code</div>
+            <div class="scroll-item">IntelliJ IDEA</div>
+            <div class="scroll-item">Jupiter notebook</div>
+            <div class="scroll-item">GitHub</div>
+            <div class="scroll-item">Canva</div>
+        </div>
+    </div>
+
+    <div class="scroll-container">
+        <h3 style="text-align: center; margin-bottom: 1rem; color: var(--accent-color);">AI Tools</h3>
+        <div class="scroll-row">
+            <div class="scroll-item">ChatGPT</div>
+            <div class="scroll-item">GitHub Copilot</div>
+            <div class="scroll-item">x.ai</div>
+            <div class="scroll-item">PyTorch</div>
+            <div class="scroll-item">Rapplit</div>
+            <div class="scroll-item">Midjourney</div>
+            <div class="scroll-item">DALL-E</div>
+            <div class="scroll-item">Meta</div>
+            <div class="scroll-item">cloude 3.7 sonnet</div>
+            <div class="scroll-item">Claude</div>
+            <div class="scroll-item">ChatGPT</div>
+            <div class="scroll-item">GitHub Copilot</div>
+            <div class="scroll-item">Gork</div>
+            <div class="scroll-item">ChatGPT</div>
+            <div class="scroll-item">GitHub Copilot</div>
+            <div class="scroll-item">x.ai</div>
+            <div class="scroll-item">Rapplit</div>
+        </div>
+    </div>
+      <!-- Tools Section
+      <section class="tools-section">
+        <div class="container">
+          <h2 class="section-title"></h2>
+
+          <div class="scrolling-container">
+            <div class="scrolling-buttons" id="row1-buttons"></div>
+          </div>
+
+          <div class="scrolling-container">
+            <div class="scrolling-buttons" id="row2-buttons"></div>
+          </div>
+        </div>
+      </section> -->
+
+      <section id="certifications">
+        <div class="container">
+          <h2 class="section-title section-title-light">
+            Certifications & Training
+          </h2>
+          <div class="cert-container">
+            <div class="cert-card">
+              <div class="cert-logo">
+                <i class="fas fa-sitemap"></i>
+              </div>
+              <h3 class="cert-title">DSA using Java</h3>
+              <p class="cert-issuer">NPTEL/IIT,Kharagpur</p>
+              <p class="cert-date">Issued: OCT 2024</p>
+              <p class="cert-desc">
+                I have completed the course in Data Structure and Algorithms using Java,
+                 the exam was held by swayam-nptel and the course is by IITkharagpur’s Professor.
+.
+              </p>
+              <a href="https://drive.google.com/file/d/1yVumAqy8WLp7Adg6pIgbwkVg1VLffaM5/view?usp=sharing" class="cert-link"
+                >View Certificate <i class="fas fa-external-link-alt"></i
+              ></a>
+            </div>
+            <div class="cert-card">
+              <div class="cert-logo">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <h3 class="cert-title">Employability skills</h3>
+              <p class="cert-issuer">Rubicon</p>
+              <p class="cert-date">Issued: JAN 2025</p>
+              <p class="cert-desc">
+                I participated in the 4 days training on Employability skills under Life skills 
+                which was organized by Rubicon at Sinhgad Institute of Technology, Lonavala.
+              </p>
+              <a href="https://drive.google.com/file/d/1Qdj6RDDVAcTtyHoybQQ3VtG5mDqWuoh6/view?usp=sharing" class="cert-link"
+                >View Certificate <i class="fas fa-external-link-alt"></i
+              ></a>
+            </div>
+            <div class="cert-card">
+              <div class="cert-logo">
+                <i class="fas fa-code"></i>
+              </div>
+              <h3 class="cert-title">Web Develpoment</h3>
+              <p class="cert-issuer">Sinhgad Techtonic</p>
+              <p class="cert-date">Issued: FEB 2024</p>
+              <p class="cert-desc">
+                “Web Development-Enter the world of Free Lancing” organized by Sinhgad Techtonic 2024.
+
+              </p>
+              <a href="https://drive.google.com/file/d/1JbkWEqFgse7XBPmJPgVCOpGtAKgc8XRo/view?usp=sharing" class="cert-link"
+                >View Certificate <i class="fas fa-external-link-alt"></i
+              ></a>
+            </div>
+            <div class="cert-card">
+              <div class="cert-logo">
+                <i class="fab fa-aws"></i>
+              </div>
+              <h3 class="cert-title">AWS Architect Basics</h3>
+              <p class="cert-issuer">Forage</p>
+              <p class="cert-date">Issued: MAR 2025</p>
+              <p class="cert-desc">
+                
+                Described my proposed architecture in plain language ensuring my client understood how 
+                it works and how costs will be calculated for it.
+              </p>
+              <a href="https://drive.google.com/file/d/1aQ_Wonq67BwZLn-vblhRsEpMFaWEGYZ_/view?usp=sharing" class="cert-link"
+                >View Certificate <i class="fas fa-external-link-alt"></i
+              ></a>
+            </div>
+            <div class="cert-card">
+                <div class="cert-logo">
+                  <i class="fab fa-node"></i>
+                </div>
+                <h3 class="cert-title">Node JS API Development</h3>
+                <p class="cert-issuer">ACM-Sinhgad</p>
+                <p class="cert-date">Issued: OCT 2023</p>
+                <p class="cert-desc">
+                    The event was hold by postman student expert in association with ACM student chapter, It 
+                    defines about how the JavaScript API's works, and all basics of API.
+                </p>
+                <a href="https://drive.google.com/file/d/1zlTjU92WO0OqkGl_nT_-pTbh5t2Ucl02/view?usp=sharing" class="cert-link"
+                  >View Certificate <i class="fas fa-external-link-alt"></i
+                ></a>
+              </div>
+              <div class="cert-card">
+                <div class="cert-logo">
+                    <i class="fas fa-keyboard"></i>
+                </div>
+                <h3 class="cert-title"> Building LLM Applications With Prompt Engineering</h3>
+                <p class="cert-issuer">NVIDIA</p>
+                <p class="cert-date">Issued: APR 2025</p>
+                <p class="cert-desc">
+                  
+                    The workshop covered using Chat LLMs with OpenAI API and LangChain, including prompts, streaming, tools, and agents for building smarter LLM applications.
+                </p>
+                <a href="https://drive.google.com/file/d/1jnYDJ_N6mW9odspg1c0f7O7OiZkpVYNU/view?usp=sharing" class="cert-link"
+                  >View Certificate <i class="fas fa-external-link-alt"></i
+                ></a>
+              </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <div class="container">
+          <h2 class="section-title">Projects</h2>
+          <div class="projects-grid">
+            <div class="project-card">
+              <div class="project-img">
+                <img src="photo/Project 1.png" alt="Project 1" />
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Full Stack Web Development</h3>
+                <div class="project-tags">
+                  <span class="project-tag">HTML</span>
+                  <span class="project-tag">CSS</span>
+                  <span class="project-tag">JavaScript</span>
+                  <span class="project-tag">Node.js</span>
+                </div>
+                <p class="project-desc">
+                    I have worked on four full-stack development projects during the CODTECH Internship: a weather forecasting application and a Weather API;
+                    a real-time chat application with Node.js and Socket.io; a collaborative document editor built with
+                    Node.js and a Chrome extension for time tracking and productivity analytics using chart.js, and LocalStorage, enhanced
+                    with AI-generated code.
+                </p>
+                <div class="project-links">
+                  <a href="https://github.com/ShreyasKadamDev/Task-1-FSWD-CodTech" class="project-link"
+                    ><i class="fab fa-github"></i> Github</a
+                  >
+                  <a href="#" class="project-link"
+                    ><i class="fas fa-external-link-alt"></i> Live Demo</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="project-card">
+              <div class="project-img">
+                <img src="photo/Project 2.png" alt="Project 2" />
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Meme Generator</h3>
+                <div class="project-tags">
+                  <span class="project-tag">Python</span>
+                  <span class="project-tag">Gen AI</span>
+                  <span class="project-tag">AI Agents</span>
+                  <span class="project-tag">Image Recognition</span>
+                </div>
+                <p class="project-desc">
+                    Gen AI Intensive Course
+                    Capstone Project 2025 where i build a meme generator with Image Understanding, Agents, Gen AI Evaluation, and Structured Output
+                    capabilities, adapted to work without a Gemini API key due to quota limits
+                </p>
+                <div class="project-links">
+                  <a href="https://github.com/ShreyasKadamDev/Gen-AI-Intensive-Course-Capstone-2025" class="project-link"
+                    ><i class="fab fa-github"></i> Github</a
+                  >
+                  <a href="https://www.kaggle.com/code/sakadev/meme-generator" class="project-link"
+                    ><i class="fas fa-external-link-alt"></i> Live Demo</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="project-card">
+              <div class="project-img">
+                <img src="photo/Project 3.png" alt="Project 3" />
+              </div>
+              <div class="project-content">
+                <h3 class="project-title">Portfolio Website</h3>
+                <div class="project-tags">
+                  <span class="project-tag">HTML</span>
+                  <span class="project-tag">CSS</span>
+                  <span class="project-tag">JS</span>
+                  <span class="project-tag">AI</span>
+                </div>
+                <p class="project-desc">
+                    I developed this portfolio website using HTML, CSS, and JavaScript with a focus on clean and simple UI. It’s fully responsive and
+                     built to showcase my skills, certifications, and projects in a professional and minimalistic way. The goal was to keep it straightforward, 
+                     easy to navigate, and visually appealing without unnecessary clutter.
+                </p>
+                <div class="project-links">
+                  <a href="#" class="project-link"
+                    ><i class="fab fa-github"></i> Github</a
+                  >
+                  <a href="#" class="project-link"
+                    ><i class="fas fa-external-link-alt"></i> Demo Video</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="container">
+          <h2 class="section-title section-title-light">Contact Me</h2>
+          <div class="contact-container">
+            <div class="contact-info">
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-text">shreyaskadamdev@gamil.com</div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div class="contact-text">+91 7261992227</div>
+              </div>
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="contact-text"><a class="noo" href="https://www.google.com/maps/place/Pune,+Maharashtra/">Pune, India</a></div>
+              </div>
+              <div class="social-links">
+                <a href="https://github.com/ShreyasKadamDev" class="social-link"
+                  ><i class="fab fa-github"></i
+                ></a>
+                <a href="https://www.linkedin.com/in/shreyaskadamdev/" class="social-link"
+                  ><i class="fab fa-linkedin"></i
+                ></a>
+                <a href="#" class="social-link"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+                <a href="#" class="social-link"
+                  ><i class="cib-leetcode"></i
+                ></a>
+              </div>
+            </div>
+            <div class="contact-form">
+              <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  class="form-input"
+                  placeholder="Your Name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  class="form-input"
+                  placeholder="Your Email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="message" class="form-label">Message</label>
+                <textarea
+                  id="message"
+                  class="form-textarea"
+                  placeholder="Your Message"
+                ></textarea>
+              </div>
+              <button type="submit" class="submit-btn">Send Message</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 SKdev - All Rights Reserved</p>
+    </footer>
+  </body>
+</html>
